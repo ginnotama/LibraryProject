@@ -22,12 +22,12 @@ CREATE TABLE IF NOT EXISTS `user`(
 DROP DATABASE IF EXISTS `book`;
 CREATE TABLE IF NOT EXISTS `book`(
 `book_id` BIGINT NOT NULL  auto_increment COMMENT '书籍id',
-`book_num` VARCHAR(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '书籍编号',
-`book_name`  VARCHAR(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '书籍名称',
-`book_author` VARCHAR(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '书籍作者',
+`book_num` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '书籍编号',
+`book_name`  VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '书籍名称',
+`book_author` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '书籍作者',
 `book_desc`  VARCHAR(10000) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '书籍描述',
 `book_location`  VARCHAR(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '书籍位置',
-`book_type` BIGINT NOT NULL COMMENT '书籍类型',
+`type_id` BIGINT NOT NULL COMMENT '书籍类型id',
 `book_status` INT(1) NOT NULL COMMENT '书籍状态 0可借阅 1已借阅 2丢失等等',
 `book_create_time` datetime NOT NULL COMMENT '书籍创建时间',
 `book_update_time` datetime NOT NULL COMMENT '书籍更新时间',
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `book`(
  KEY `book_num` (`book_num`) USING BTREE,
  KEY `book_name` (`book_name`) USING BTREE,
  KEY `book_author` (`book_author`) USING BTREE,
- KEY `book_type` (`book_type`) USING BTREE
+ KEY `type_id` (`type_id`) USING BTREE
 )ENGINE=InnoDB  DEFAULT CHARSET=utf8mb3 ROW_FORMAT=COMPACT;
 
 
@@ -61,7 +61,6 @@ CREATE TABLE IF NOT EXISTS `type`(
 `type_id` BIGINT NOT NULL  auto_increment COMMENT '类型id',
 `type_name` VARCHAR(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '类型名称',
 `type_desc`  VARCHAR(10000) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '类型描述',
-`book_id`  BIGINT NOT NULL COMMENT '书籍id',
  PRIMARY KEY (`type_id`) USING BTREE
  )ENGINE=InnoDB  DEFAULT CHARSET=utf8mb3 ROW_FORMAT=COMPACT;
 
