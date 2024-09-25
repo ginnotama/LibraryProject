@@ -22,11 +22,11 @@ CREATE TABLE IF NOT EXISTS `user`(
 DROP DATABASE IF EXISTS `book`;
 CREATE TABLE IF NOT EXISTS `book`(
 `book_id` BIGINT NOT NULL  auto_increment COMMENT '书籍id',
-`book_num` VARCHAR(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '书籍编号',
-`book_name`  VARCHAR(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '书籍名称',
-`book_author` VARCHAR(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '书籍作者',
-`book_desc`  VARCHAR(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '书籍描述',
-`book_location`  VARCHAR(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '书籍位置',
+`book_num` VARCHAR(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '书籍编号',
+`book_name`  VARCHAR(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '书籍名称',
+`book_author` VARCHAR(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '书籍作者',
+`book_desc`  VARCHAR(10000) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '书籍描述',
+`book_location`  VARCHAR(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '书籍位置',
 `book_type` BIGINT NOT NULL COMMENT '书籍类型',
 `book_status` INT(1) NOT NULL COMMENT '书籍状态 0可借阅 1已借阅 2丢失等等',
 `book_create_time` datetime NOT NULL COMMENT '书籍创建时间',
@@ -59,8 +59,22 @@ CREATE TABLE IF NOT EXISTS `borrow`(
 DROP TABLE IF EXISTS `type`;
 CREATE TABLE IF NOT EXISTS `type`(
 `type_id` BIGINT NOT NULL  auto_increment COMMENT '类型id',
-`type_name` VARCHAR(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '类型名称',
-`type_desc`  VARCHAR(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '类型描述',
+`type_name` VARCHAR(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '类型名称',
+`type_desc`  VARCHAR(10000) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '类型描述',
 `book_id`  BIGINT NOT NULL COMMENT '书籍id',
  PRIMARY KEY (`type_id`) USING BTREE
  )ENGINE=InnoDB  DEFAULT CHARSET=utf8mb3 ROW_FORMAT=COMPACT;
+
+ -- 创建评论表, 作为书籍表和用户表中间表, 自增 id 作为主键索引, 创建书籍编号和用户id作为查询索引
+ DROP TABLE IF EXISTS `comment`;
+ CREATE TABLE IF NOT EXISTS `comment`(
+    `comment_id` BIGINT NOT NULL  auto_increment COMMENT '评论id自增主键',
+    `comment_desc`  VARCHAR(20000) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '评论详情',
+    `book_create_time` datetime NOT NULL COMMENT '评论创建时间',
+    `book_id` BIGINT NOT NULL  COMMENT '书籍id',
+    `user_id` BIGINT NOT NULL COMMENT '用户id',
+    PRIMARY KEY (`comment_id`) USING BTREE,
+    KEY `book_id` (`book_id`) USING BTREE,
+    KEY `user_id` (`user_id`) USING BTREE
+ )ENGINE=InnoDB  DEFAULT CHARSET=utf8mb3 ROW_FORMAT=COMPACT;
+
