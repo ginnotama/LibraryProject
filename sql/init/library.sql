@@ -51,6 +51,7 @@ CREATE TABLE IF NOT EXISTS `borrow`(
 `create_time` datetime NOT NULL COMMENT '创建时间',
  PRIMARY KEY (`borrow_id`) USING BTREE,
  KEY `book_id` (`book_id`) USING BTREE,
+ KEY `borrow_date` (`borrow_datebook_id`) USING BTREE,
  KEY `user_id` (`user_id`) USING BTREE
 )ENGINE=InnoDB  DEFAULT CHARSET=utf8mb3 ROW_FORMAT=COMPACT;
 
@@ -69,11 +70,12 @@ CREATE TABLE IF NOT EXISTS `type`(
  CREATE TABLE IF NOT EXISTS `comment`(
     `comment_id` BIGINT NOT NULL  auto_increment COMMENT '评论id自增主键',
     `comment_desc`  VARCHAR(20000) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '评论详情',
-    `book_create_time` datetime NOT NULL COMMENT '评论创建时间',
+    `comment_create_time` datetime NOT NULL COMMENT '评论创建时间',
     `book_id` BIGINT NOT NULL  COMMENT '书籍id',
     `user_id` BIGINT NOT NULL COMMENT '用户id',
     PRIMARY KEY (`comment_id`) USING BTREE,
     KEY `book_id` (`book_id`) USING BTREE,
+    KEY `comment_create_time` (`comment_create_time`) USING BTREE,
     KEY `user_id` (`user_id`) USING BTREE
  )ENGINE=InnoDB  DEFAULT CHARSET=utf8mb3 ROW_FORMAT=COMPACT;
 
