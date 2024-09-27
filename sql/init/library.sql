@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS `book`(
 `book_desc`  VARCHAR(10000) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '书籍描述',
 `book_location`  VARCHAR(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '书籍位置',
 `type_id` BIGINT NOT NULL COMMENT '书籍类型id',
-`book_status` INT(1) NOT NULL COMMENT '书籍状态 0可借阅 1已借阅 2丢失等等',
+`book_status` INT(10) NOT NULL COMMENT '书籍状态 0可借阅 1已借阅 2丢失等等',
 `book_create_time` datetime NOT NULL COMMENT '书籍创建时间',
 `book_update_time` datetime NOT NULL COMMENT '书籍更新时间',
  PRIMARY KEY (`book_id`) USING BTREE,
@@ -45,13 +45,14 @@ CREATE TABLE IF NOT EXISTS `borrow`(
 `borrow_id` BIGINT NOT NULL  auto_increment COMMENT '借阅id',
 `book_id` BIGINT NOT NULL  COMMENT '书籍id',
 `user_id` BIGINT NOT NULL COMMENT '用户id',
+`borrow_state` INT(10) NOT NULL COMMENT '借阅状态 1 借阅完成 0 借阅中',
 `borrow_date` datetime NOT NULL COMMENT '借阅时间',
 `end_date` datetime NOT NULL COMMENT '截止时间',
 `return_date` datetime NOT NULL COMMENT '归还时间',
 `create_time` datetime NOT NULL COMMENT '创建时间',
  PRIMARY KEY (`borrow_id`) USING BTREE,
  KEY `book_id` (`book_id`) USING BTREE,
- KEY `borrow_date` (`borrow_datebook_id`) USING BTREE,
+ KEY `borrow_date` (`borrow_date`) USING BTREE,
  KEY `user_id` (`user_id`) USING BTREE
 )ENGINE=InnoDB  DEFAULT CHARSET=utf8mb3 ROW_FORMAT=COMPACT;
 
@@ -70,6 +71,7 @@ CREATE TABLE IF NOT EXISTS `type`(
  CREATE TABLE IF NOT EXISTS `comment`(
     `comment_id` BIGINT NOT NULL  auto_increment COMMENT '评论id自增主键',
     `comment_desc`  VARCHAR(20000) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '评论详情',
+    `comment_state` INT(10) NOT NULL COMMENT '评论状态 0 评论不可见 1 评论可见  2 评论删除',
     `comment_create_time` datetime NOT NULL COMMENT '评论创建时间',
     `book_id` BIGINT NOT NULL  COMMENT '书籍id',
     `user_id` BIGINT NOT NULL COMMENT '用户id',
