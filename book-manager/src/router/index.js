@@ -19,6 +19,11 @@ const router = new VueRouter({
       path: '/index',
       name: 'Index',
       component: () => import('../view/IndexPage.vue')
+    },
+    {
+      path: '/setting',
+      name : 'Setting',
+      component: () => import('../view/UserSetting.vue')
     }
   ]
 });
