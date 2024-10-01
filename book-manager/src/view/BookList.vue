@@ -14,6 +14,7 @@
             USER <i class="el-icon-user-solid"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item icon="el-icon-setting" command="setting">SETTING</el-dropdown-item>
             <el-dropdown-item icon="el-icon-back" command="quit">QUIT</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -62,6 +63,9 @@ export default {
       if (command === 'quit') {
         this.$router.replace({ path: '/' });
       }
+      if (command === 'setting') {
+        this.$router.replace({ path: '/setting' });
+      }
       // this.$message('click on item ' + command);
     }
   }
@@ -82,6 +86,7 @@ export default {
   background-color: #ccc;
   display: flex;
   flex-direction: row;
+  border-bottom: solid 1px #e6e6e6;
  }
 
 .header-left {
@@ -94,9 +99,9 @@ export default {
   justify-content: flex-end;
   align-items: center;
   background-color: white;
-  height: 58px;
+  height: 60px;
   box-sizing: content-box;
-  border-bottom: solid 2px transparent;
+  /* border-bottom: solid 2px transparent; */
   padding-right: 32px;
 }
 
