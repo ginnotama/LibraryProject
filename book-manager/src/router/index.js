@@ -18,7 +18,7 @@ const router = new VueRouter({
     {
       path: '/index',
       name: 'Index',
-      component: () => import('../view/Index.vue')
+      component: () => import('../view/IndexPage.vue')
     }
   ]
 });
