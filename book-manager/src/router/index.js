@@ -24,6 +24,11 @@ const router = new VueRouter({
       path: '/setting',
       name : 'Setting',
       component: () => import('../view/UserSetting.vue')
+    },
+    {
+      path: '/bookDetails',
+      name : 'details',
+      component: () => import('../view/BookDetail.vue')
     }
   ]
 });
