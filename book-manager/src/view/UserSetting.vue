@@ -40,7 +40,7 @@
             </el-checkbox-group>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="save">SAVE</el-button>
+            <el-button type="primary" @click="saveHobby">SAVE</el-button>
             <!-- <el-button>取消</el-button> -->
           </el-form-item>
         </el-form>
@@ -63,9 +63,6 @@ export default {
       },
       hobbyFrom: {
         checkedHobby: ['Philosophy', 'Art'],
-        password: '',
-        age: '',
-        gender: ''
       },
       hobbys: ['Philosophy', 'Religion', 'SocialSciences', 'Agricultural Science', 'Technology', 'Transportation', 'Aviation and aerospace', 
       'Politics', 'Law', 'Military', 'Astronomy', 'Earth Sciences', 'Biological Sciences', 'Medicine',  
@@ -88,6 +85,10 @@ export default {
     },
     handleCheckedCitiesChange(value) {
       console.log(value);
+    },
+    saveHobby() {
+      // TODO: save hobby
+      console.log('save Hobby', this.hobbyFrom);
       
     }
   }
