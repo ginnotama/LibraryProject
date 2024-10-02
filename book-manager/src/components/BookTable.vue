@@ -18,6 +18,9 @@
     </div>
     <div class="f-1 padding-8-12">
       <div class="table-header">
+        <el-button @click="drawer = true" type="primary" round style="margin-left: 16px; height: 40px;">
+            ADVANCED SEARCH
+        </el-button>
         <el-input style="width: 200px; padding: 8px 0;" v-model="nameKeyWord" placeholder="SEARCH BY NAME"></el-input>
       </div>
 
@@ -48,24 +51,112 @@
           label="INFO">
         </el-table-column>
       </el-table>
+      <el-drawer
+        title="ADVANCED SEARCH"
+        ref="advancedSearch"
+        :visible.sync="drawer"
+        direction="rtl"
+        :close-on-press-escape="false"
+        :wrapperClosable="false"
+        @open="drawOpen"
+        >
+        <div class="drawer-body">
+          <div class="drawer-body-item padding-b-24">
+            <el-switch
+              v-model="isSearchByName"
+              active-color="#13ce66"
+              inactive-color="#ff4949"
+              active-text="SEARCH BY NAME">
+            </el-switch>
+            <el-input class="padding-t-12" v-show="isSearchByName" v-model="drawerKeyWord.nameKeyWord" placeholder="SEARCH BY NAME"></el-input>
+          </div>
+
+          <div class="drawer-body-item padding-b-24">
+            <el-switch
+              v-model="isSearchByAuthor"
+              active-color="#13ce66"
+              inactive-color="#ff4949"
+              active-text="SEARCH BY AUTHOR">
+            </el-switch>
+            <el-input class="padding-t-12" v-show="isSearchByAuthor" v-model="drawerKeyWord.authorKeyWord" placeholder="SEARCH BY AUTHOR"></el-input>
+          </div>
+
+          <div class="drawer-body-item padding-b-24">
+            <el-switch
+              v-model="isSearchByClassify"
+              active-color="#13ce66"
+              inactive-color="#ff4949"
+              active-text="SEARCH BY CLASSIFY">
+            </el-switch>
+            <el-input class="padding-t-12" v-show="isSearchByClassify" v-model="drawerKeyWord.classifyKeyWord" placeholder="SEARCH BY ClASSIFY"></el-input>
+          </div>
+
+          <div class="drawer-body-item padding-b-24">
+            <el-switch
+              v-model="isSearchByInfo"
+              active-color="#13ce66"
+              inactive-color="#ff4949"
+              active-text="SEARCH BY INFO">
+            </el-switch>
+            <el-input class="padding-t-12" v-show="isSearchByInfo" v-model="drawerKeyWord.infoKeyWord" placeholder="SEARCH BY INFO"></el-input>
+          </div>
+
+          <div class="drawer-body-item padding-b-24">
+            <el-switch
+              v-model="isSearchByHobby"
+              active-color="#13ce66"
+              inactive-color="#ff4949"
+              active-text="SEARCH BY HOBBY">
+            </el-switch>
+            <div class="padding-t-12" v-show="isSearchByHobby">
+              <p style="margin: 0; color: #C0C4CC;">The preferences in the user information have been read. Please continue to select if you want to add them.</p>
+              <el-checkbox-group class="check-box-group" v-model="drawerKeyWord.selectedHobbys">
+                <el-checkbox v-for="hobby in hobbys" :label="hobby" :disabled="userHobbys.includes(hobby)" :key="hobby">{{hobby}}</el-checkbox>
+              </el-checkbox-group>
+            </div>
+          </div>
+
+          <div>
+            <el-button type="primary" round @click="hightLevelSearch">SUMBIT AND SEAECH</el-button>
+          </div>
+        </div>
+      </el-drawer>
     </div>
   </div>
 </template>
 
 <script>
 import { mock1, mock2 } from '../mock/mockData';
+import { hobby } from '../mock/hobbyMock';
 export default {
   data() {
     return {
       activeIndex: '3',
       tableData: [],
-      nameKeyWord: ''
+      nameKeyWord: '',
+      drawer: false,
+      drawerKeyWord: {
+        nameKeyWord: '',
+        authorKeyWord: '',
+        classifyKeyWord: '',
+        infoKeyWord: '',
+        selectedHobbys: []
+      },
+      isSearchByName: true,
+      isSearchByAuthor: true,
+      isSearchByClassify: true,
+      isSearchByInfo: true,
+      isSearchByHobby: true,
+      hobbys: [],
+      userHobbys: ['Philosophy', 'Art', 'Safety science', 'Natural sciences', 'History'],
+
     }
   },
 
   created() {
     this.activeIndex = '3';
     this.tableData = mock1;
+    this.hobbys = hobby;
   },
 
   watch: {
@@ -91,6 +182,41 @@ export default {
         this.tableData = mock2;
         this.nameKeyWord = '';
       }
+    },
+    drawOpen() {
+      this.drawerKeyWord.selectedHobbys = structuredClone(this.userHobbys);
+    },
+    hightLevelSearch() {
+      const searchInfo = this.getAduancedSearchInfo();
+      console.log('search info 🧐:', searchInfo);
+      this.$refs.advancedSearch.closeDrawer();
+      this.drawerKeyWord = {
+        nameKeyWord: '',
+        authorKeyWord: '',
+        classifyKeyWord: '',
+        infoKeyWord: '',
+        selectedHobbys: []
+      };
+    },
+
+    getAduancedSearchInfo() {
+      const searchInfo = {};
+      if (this.isSearchByName) {
+        searchInfo.nameKeyWord = this.drawerKeyWord.nameKeyWord;
+      }
+      if (this.isSearchByAuthor) {
+        searchInfo.authorKeyWord = this.drawerKeyWord.authorKeyWord;
+      }
+      if (this.isSearchByClassify) {
+        searchInfo.classifyKeyWord = this.drawerKeyWord.classifyKeyWord;
+      }
+      if (this.isSearchByInfo) {
+        searchInfo.infoKeyWord = this.drawerKeyWord.infoKeyWord;
+      }
+      if (this.isSearchByHobby) {
+        searchInfo.selectedHobbys = this.drawerKeyWord.selectedHobbys;
+      }
+      return searchInfo;
     }
   }
 }
@@ -127,5 +253,27 @@ export default {
   flex-direction: row-reverse;
   padding: 0 12px;
   border-bottom: solid 1px #e6e6e6;
+  align-items: center;
+}
+.drawer-body {
+  display: flex;
+  flex-direction: column;
+  padding: 0 12px 24px 12px;
+}
+.drawer-body-item {
+  display: flex;
+  flex-direction: column;
+}
+.padding-b-24 {
+  padding-bottom: 24px;
+}
+.padding-t-12 {
+  padding-top: 12px;
+}
+.check-box-group {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start !important;
+  align-items: flex-start !important;
 }
 </style>

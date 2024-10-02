@@ -50,6 +50,9 @@
 </template>
 
 <script>
+import { hobby } from '../mock/hobbyMock'
+
+
 export default {
 
   data: function () {
@@ -62,14 +65,13 @@ export default {
         gender: ''
       },
       hobbyFrom: {
-        checkedHobby: ['Philosophy', 'Art'],
+        checkedHobby: ['Philosophy', 'Art', 'Safety science', 'Natural sciences', 'History'],
       },
-      hobbys: ['Philosophy', 'Religion', 'SocialSciences', 'Agricultural Science', 'Technology', 'Transportation', 'Aviation and aerospace', 
-      'Politics', 'Law', 'Military', 'Astronomy', 'Earth Sciences', 'Biological Sciences', 'Medicine',  
-      'Language and literature', 'Art', 'History', 'Geography', 'Natural sciences', 'Mathematical Science', 'Chemistry',
-      'Environmental science', 'Safety science', 'Comprehensive books'
-      ]
+      hobbys: []
     }
+  },
+  created() {
+    this.hobbys = hobby;    
   },
   methods: {
     goBook() {
