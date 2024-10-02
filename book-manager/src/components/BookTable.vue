@@ -27,7 +27,8 @@
       <el-table
         :data="tableData"
         height="100%"
-        style="width: 100%;">
+        style="width: 100%;"
+        @cell-dblclick="tableCellDbClick">
          <template slot="empty">
             <p>NOT FOUND DATA</p>
           </template>
@@ -49,6 +50,9 @@
         <el-table-column
           prop="info"
           label="INFO">
+          <template slot="header">
+            <p><strong>INFO</strong> <span style="font-size:12px; color:#E6A23C">Double click cell to view book details.</span></p>
+          </template>
         </el-table-column>
       </el-table>
       <el-drawer
@@ -217,6 +221,12 @@ export default {
         searchInfo.selectedHobbys = this.drawerKeyWord.selectedHobbys;
       }
       return searchInfo;
+    },
+    tableCellDbClick(row, column) {
+      if (column.property === 'info') {
+        this.$router.replace({ name: 'details', params: { row: structuredClone(row)} });        
+      }
+      
     }
   }
 }

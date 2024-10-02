@@ -3,7 +3,8 @@ const mock1 = [
     "name": "Sapiens: A Brief History of Humankind",
     "author": "Yuval Noah Harari",
     "spec": "History, Anthropology",
-    "info": "An account of the 70,000-year history of Homo sapiens from the Stone Age to the Silicon Age. It explores how humans came to be the dominant species on Earth and questions where we might be heading."
+    "info": "An account of the 70,000-year history of Homo sapiens from the Stone Age to the Silicon Age. It explores how humans came to be the dominant species on Earth and questions where we might be heading.",
+    "id": '1',
   },
   {
     "name": "The Selfish Gene",
