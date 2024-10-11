@@ -1,10 +1,12 @@
 <template>
+<!-- 登录页面 -->
   <div class="index">
     <div class="box">
       <div>
         <h1>BOOK MANAGER</h1>
       </div>
       <div>
+        <!-- 登录页面的表单 有user和password两个输入框 -->
         <el-form ref="form" :model="form" label-position="left" label-width="100px">
           <el-form-item label="USER">
             <el-input v-model="form.user"  placeholder="enter the account number"></el-input>
@@ -15,6 +17,10 @@
         </el-form>
       </div>
       <div>
+        <!-- 登录页面的按钮 有两个按钮 一个是登录 一个是注册 -->
+        <!-- 点击注册按钮的时候 这两个按钮展示的值会变化  -->
+        <!-- 变化为 register 和 quit -->
+        <!-- onSubmit 和 register 方法具体执行的逻辑 根据 type 的值来确定 -->
         <el-button type="primary" @click="onSubmit">{{ type }}</el-button>
         <el-button type="text" size="mini" @click="register">{{ textType }}</el-button>
       </div>
