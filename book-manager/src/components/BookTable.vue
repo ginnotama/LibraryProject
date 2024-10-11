@@ -1,5 +1,7 @@
 <template>
+<!-- 书籍列表页面 -->
   <div class="book-inner">
+    <!-- 书籍列表页面左侧的两个子页签 PAPER 和 BOOK -->
     <div class="b-r-1 w-120">
       <el-menu
         default-active="3"
@@ -18,12 +20,14 @@
     </div>
     <div class="f-1 padding-8-12">
       <div class="table-header">
+         <!-- 高级搜索按钮 -->
         <el-button @click="drawer = true" type="primary" round style="margin-left: 16px; height: 40px;">
             ADVANCED SEARCH
         </el-button>
+        <!-- 按名称搜索的搜索框 -->
         <el-input style="width: 200px; padding: 8px 0;" v-model="nameKeyWord" placeholder="SEARCH BY NAME"></el-input>
       </div>
-
+<!-- 展示书籍信息的表格 -->
       <el-table
         :data="tableData"
         height="100%"
@@ -55,6 +59,7 @@
           </template>
         </el-table-column>
       </el-table>
+      <!-- 高级搜索按钮点击后,弹出的抽屉 -->
       <el-drawer
         title="ADVANCED SEARCH"
         ref="advancedSearch"
@@ -64,7 +69,9 @@
         :wrapperClosable="false"
         @open="drawOpen"
         >
+        <!-- 抽屉中展示的搜索项 -->
         <div class="drawer-body">
+          <!-- 是否按名称搜索 -->
           <div class="drawer-body-item padding-b-24">
             <el-switch
               v-model="isSearchByName"
@@ -74,7 +81,7 @@
             </el-switch>
             <el-input class="padding-t-12" v-show="isSearchByName" v-model="drawerKeyWord.nameKeyWord" placeholder="SEARCH BY NAME"></el-input>
           </div>
-
+    <!-- 是否按作者搜索 -->
           <div class="drawer-body-item padding-b-24">
             <el-switch
               v-model="isSearchByAuthor"
@@ -84,7 +91,7 @@
             </el-switch>
             <el-input class="padding-t-12" v-show="isSearchByAuthor" v-model="drawerKeyWord.authorKeyWord" placeholder="SEARCH BY AUTHOR"></el-input>
           </div>
-
+<!-- 是否按类别搜索 -->
           <div class="drawer-body-item padding-b-24">
             <el-switch
               v-model="isSearchByClassify"
@@ -94,7 +101,7 @@
             </el-switch>
             <el-input class="padding-t-12" v-show="isSearchByClassify" v-model="drawerKeyWord.classifyKeyWord" placeholder="SEARCH BY ClASSIFY"></el-input>
           </div>
-
+<!-- 是否按书籍信息搜索 -->
           <div class="drawer-body-item padding-b-24">
             <el-switch
               v-model="isSearchByInfo"
@@ -104,7 +111,7 @@
             </el-switch>
             <el-input class="padding-t-12" v-show="isSearchByInfo" v-model="drawerKeyWord.infoKeyWord" placeholder="SEARCH BY INFO"></el-input>
           </div>
-
+<!-- 是否按兴趣爱好搜索 -->
           <div class="drawer-body-item padding-b-24">
             <el-switch
               v-model="isSearchByHobby"
@@ -190,6 +197,7 @@ export default {
     drawOpen() {
       this.drawerKeyWord.selectedHobbys = structuredClone(this.userHobbys);
     },
+    // 高级搜索抽屉中 提交搜索 通过getAduancedSearchInfo获取搜索条件 然后关闭高级搜索的抽屉
     hightLevelSearch() {
       const searchInfo = this.getAduancedSearchInfo();
       console.log('search info 🧐:', searchInfo);
@@ -203,6 +211,7 @@ export default {
       };
     },
 
+    // 获取高级搜索的搜索条件 只有当对应的搜索条件是打开状态时，才返回对应的搜索条件
     getAduancedSearchInfo() {
       const searchInfo = {};
       if (this.isSearchByName) {
@@ -222,8 +231,10 @@ export default {
       }
       return searchInfo;
     },
+    // 双击INFO单元格的时候触发的方法 会跳转到书籍详情页面
     tableCellDbClick(row, column) {
       if (column.property === 'info') {
+        // 跳转时 使用structuredClone方法 deep clone 当前行的数据
         this.$router.replace({ name: 'details', params: { row: structuredClone(row)} });        
       }
       

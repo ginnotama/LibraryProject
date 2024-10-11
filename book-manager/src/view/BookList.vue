@@ -1,7 +1,9 @@
 <template>
+<!-- 书籍列表页面 -->
   <div class="book-list">
     <div class="book-list-header">
       <div class="header-left">
+        <!-- 定义了三个头部导航栏  BOOK SEARCH BORROW和USER-->
         <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
           <el-menu-item index="book">BOOK SEARCH</el-menu-item>
           <el-menu-item index="brrow">BORROW</el-menu-item>
@@ -9,10 +11,12 @@
         </el-menu>
       </div>
       <div class="header-right">
+        <!-- 显示用户的头像 -->
         <el-dropdown @command="handleCommand" placement="bottom">
           <span class="el-dropdown-link">
             USER <i class="el-icon-user-solid"></i>
           </span>
+          <!-- 鼠标悬浮到用户头像上时，展示的两个下拉选项 SETTING和QUIT -->
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item icon="el-icon-setting" command="setting">SETTING</el-dropdown-item>
             <el-dropdown-item icon="el-icon-back" command="quit">QUIT</el-dropdown-item>
@@ -22,6 +26,7 @@
     </div>
 
     <div class="book-list-body">
+      <!-- 页面中间部分 根据头部导航栏选中的activeIndex的值来决定显示哪个页面 -->
       <div v-show="activeIndex==='book'" class="w-h-100">
         <BookTable/>
       </div>
@@ -33,6 +38,7 @@
       </div>
     </div>
 
+    <!-- 页面底部区域 -->
     <div class="book-list-footer">
       Book Manager System By AAA
     </div>
@@ -55,14 +61,20 @@ export default {
   },
 
   methods: {
+    // 头部导航栏选中状态变化时触发的方法 更改activeIndex的值 动态渲染页面中间的区域
     handleSelect(key, keyPath) {
       this.activeIndex = key;
       console.log(key, keyPath);
     },
+    // 鼠标悬浮到用户头像上时，下拉框中按钮点击后触发的方法
+    // 跳转到设置页面
     handleCommand(command) {
+      
+      // 选中quit 则跳转到登录页面
       if (command === 'quit') {
         this.$router.replace({ path: '/' });
       }
+      // 选中setting 跳转到设置页面
       if (command === 'setting') {
         this.$router.replace({ path: '/setting' });
       }

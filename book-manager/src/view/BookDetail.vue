@@ -1,8 +1,11 @@
 <template>
+<!-- 书籍详细页面 -->
     <div class="detail-setting">
       <div class="detail-header"> 
+        <!-- 返回书籍列表页的按钮 -->
         <el-button icon="el-icon-back" type="text" @click="goBook"> BACK</el-button>
       </div>
+      <!-- 动态展示传输过来的数据数据 -->
       <div class="detail-body">
         {{ params }}
       </div>
@@ -17,6 +20,7 @@ export default {
     }
   },
 
+// 在create生命周期中，获取路由参数，并赋值给data中的params
   created() {
     console.log('this.$route', this.$route);
     this.params = this.$route.params;

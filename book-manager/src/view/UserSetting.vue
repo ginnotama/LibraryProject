@@ -1,14 +1,17 @@
 <template>
+<!-- 用户设置页面 -->
   <div class="user-setting">
+    <!-- 返回到书籍列表页面的按钮 -->
     <div class="user-header"> 
       <el-button icon="el-icon-back" type="text" @click="goBook"> BACK</el-button>
     </div>
     <div class="user-body">
+      <!-- 两个页签 分别是 USER 和 HOBBY -->
       <el-menu :default-active="activeIndex" class="el-menu-demo" @select="handleSelect">
         <el-menu-item index="personalInformation">USER</el-menu-item>
         <el-menu-item index="preferences">HOBBY</el-menu-item>
       </el-menu>
-
+      <!-- 用户信息设置的表单 -->
       <div v-show="activeIndex==='personalInformation'" class="user-body-form">
         <el-form ref="form" :model="userFrom" label-position="left" label-width="100px">
           <el-form-item label="USER NAME">
@@ -27,11 +30,10 @@
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="save">SAVE</el-button>
-            <!-- <el-button>取消</el-button> -->
           </el-form-item>
         </el-form>
       </div>
-
+      <!-- HOBBY页面的勾选框 -->
       <div v-show="activeIndex==='preferences'" class="user-body-form">
         <el-form ref="form" :model="hobbyFrom" label-position="left" label-width="120px">
           <el-form-item label="BOOK PREFERENCES">
@@ -41,7 +43,6 @@
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="saveHobby">SAVE</el-button>
-            <!-- <el-button>取消</el-button> -->
           </el-form-item>
         </el-form>
       </div>
