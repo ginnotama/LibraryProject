@@ -7,3 +7,10 @@ spring:
     url: jdbc:mysql://localhost:3306/library
     username: root
     password: root
+logging:
+  level:
+    root: info
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 输出 SQL 日志到控制台

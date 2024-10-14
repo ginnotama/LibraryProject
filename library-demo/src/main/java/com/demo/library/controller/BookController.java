@@ -11,6 +11,7 @@ import com.demo.library.service.impl.BookServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,12 +30,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/book")
 @RequiredArgsConstructor
 public class BookController {
-    BookServiceImpl bookService;
+    @Autowired
+    private BookServiceImpl bookService;
 
     @PostMapping("/books")
-    public Result<IPage<Book>> getBook(@RequestBody QueryBooks queryBooksParam){
+    public Result<IPage<Book>> getBook(@Validated @RequestBody QueryBooks queryBooksParam){
         QueryWrapper<Book> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().like(Book::getBookName, queryBooksParam.getName());
+        if(StringUtils.hasText(queryBooksParam.getName())){
+            queryWrapper.lambda().like(Book::getBookName, queryBooksParam.getName());
+        }
         if(StringUtils.hasText(queryBooksParam.getType())){
             queryWrapper.lambda().eq(Book::getTypeId, queryBooksParam.getType());
         }
