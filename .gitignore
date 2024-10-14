@@ -1,0 +1,5 @@
+/library-demo/target/
+/library-demo/.idea/
+/.idea/
+/library-demo/Library.iml
+/library-demo/.mvn/wrapper/maven-wrapper.properties
