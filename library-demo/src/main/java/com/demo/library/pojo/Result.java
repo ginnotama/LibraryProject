@@ -40,4 +40,7 @@ public class Result <T> {
     public static <D> Result<D>  error(D date){
         return new Result<>(RetCode.ERROR, date);
     }
+    public static <D> Result<D>  error(){
+        return new Result<>(RetCode.ERROR);
+    }
 }
