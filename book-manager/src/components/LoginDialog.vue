@@ -67,7 +67,7 @@
 
 <script>
 
-import { getCode, userLogin } from "../api/User";
+import { getCode, userLogin, registerManager, registerUser } from "../api/User";
 
 export default {
   data() {
@@ -179,11 +179,63 @@ export default {
             message: 'Please enter the information',
             type: 'warning'
           });
+          return;
         }
-        // TODO: register
-        console.log('register', this.registerForm);
+        if (this.registerForm.type == 0) {
+          this.doRegisterUser();
+        }
+        if (this.registerForm.type == 1) {
+          this.doRegisterManager();
+        }
       }       
-    }
+    },
+
+    doRegisterUser() {
+      registerUser({
+        code: this.registerForm.code,
+        userPassword: this.registerForm.userPassword,
+        userLoginName: this.registerForm.userLoginName,
+        userName: this.registerForm.userName
+      }
+      ).then((res) => {
+        console.log(res);
+        this.activeName = 'login';
+        this.$message({
+          message: 'Register success',
+          type: 'success'
+        });
+      }).catch(error => {
+        console.error(error);
+        this.refreshCode();
+        this.$message({
+          message: 'Register failed',
+          type: 'error'
+        });
+      })
+    },
+    doRegisterManager() {
+      registerManager({
+        code: this.registerForm.code,
+        userPassword: this.registerForm.userPassword,
+        userLoginName: this.registerForm.userLoginName,
+        userName: this.registerForm.userName
+      }
+      ).then((res) => {
+        console.log(res);
+        this.activeName = 'login';
+        this.$message({
+         message: 'Register success',
+        type: 'success'
+        })
+      }).catch(error => {
+        console.error(error);
+        this.refreshCode();
+        this.$message({
+          message: 'Register failed',
+          type: 'error'
+        });
+      })
+    },
   }
 }
 </script>
