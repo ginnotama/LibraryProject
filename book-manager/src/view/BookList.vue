@@ -14,12 +14,13 @@
         <!-- 显示用户的头像 -->
         <el-dropdown @command="handleCommand" placement="bottom">
           <span class="el-dropdown-link">
-            USER <i class="el-icon-user-solid"></i>
+            {{ nickName }} <i class="el-icon-user-solid"></i>
           </span>
           <!-- 鼠标悬浮到用户头像上时，展示的两个下拉选项 SETTING和QUIT -->
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item icon="el-icon-setting" command="setting">SETTING</el-dropdown-item>
-            <el-dropdown-item icon="el-icon-back" command="quit">QUIT</el-dropdown-item>
+            <el-dropdown-item v-show="!isLogin" icon="el-icon-s-home" command="login">LOGIN</el-dropdown-item>
+            <el-dropdown-item icon="el-icon-setting" command="setting" :disabled="!isLogin">SETTING</el-dropdown-item>
+            <el-dropdown-item v-show="isLogin" icon="el-icon-back" command="quit">QUIT</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -42,33 +43,31 @@
     <div class="book-list-footer">
       Book Manager System By AAA
     </div>
+    <LoginDialog ref="loginDialog" @loginSucess="loginSucess"/>
   </div>
 </template>
 
 <script>
 
 import BookTable from '../components/BookTable';
-import { registerUser } from "../api/User";
+import LoginDialog from "../components/LoginDialog.vue";
 export default {
   data() {
     return {
-      activeIndex: 'book'
+      activeIndex: 'book',
+      nickName: 'USER',
+      isLogin: false,
+      userType: undefined,
     }
   },
 
   components: {
-    BookTable
+    BookTable,
+    LoginDialog
   },
 
   created() {
-    registerUser({
-    "code": "ABCD",
-    "userLoginName": "user",
-    "userName": "JiamaoW",
-    "userPassword": "123"
-    }).then(res => {
-      console.log(res);
-    })
+
   },
 
   methods: {
@@ -80,16 +79,38 @@ export default {
     // 鼠标悬浮到用户头像上时，下拉框中按钮点击后触发的方法
     // 跳转到设置页面
     handleCommand(command) {
+
+      if (command === 'login') {
+        this.$refs.loginDialog.changeVisibel(true);
+        return;
+      }
       
       // 选中quit 则跳转到登录页面
       if (command === 'quit') {
-        this.$router.replace({ path: '/' });
+        this.isLogin = false;
+        this.userType = undefined;
+        this.nickName = 'USER';
+        this.$message({
+          message: 'Logout success',
+          type: 'success'
+        });
       }
       // 选中setting 跳转到设置页面
       if (command === 'setting') {
-        this.$router.replace({ path: '/setting' });
+        // this.$router.replace({ path: '/setting' });
       }
       // this.$message('click on item ' + command);
+    },
+
+    loginSucess(data) {
+      this.nickName = data.userName;
+      this.userType = data.userType;
+      this.isLogin = true;
+      this.$refs.loginDialog.changeVisibel(false);
+      this.$message({
+        message: 'Login success',
+        type: 'success'
+      });      
     }
   }
 }

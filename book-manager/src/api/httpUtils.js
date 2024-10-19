@@ -47,6 +47,11 @@ function requestRecall(method, url, urlParams, bodyParams, headers, responseType
       timeout,
     })
       .then((response) => {
+        if (responseType === 'blob') {
+          resolve(response.data);
+          return;
+        }
+        
         const { code, msg } = response.data;
         if (code != 200) {
           errorHandler(code, msg);
@@ -90,9 +95,7 @@ export function apiGet(requestURL, urlParams, headers, responseType, timeout) {
  * @param {String} timeout 超时时间
  * @returns {Promise} promise对象
  */
-export function apiPost(requestURL, urlParams, bodyParams, headers, responseType, timeout) {
-  console.log(requestURL);
-  
+export function apiPost(requestURL, urlParams, bodyParams, headers, responseType, timeout) {  
   return _request('post', requestURL, urlParams, bodyParams, headers, responseType, timeout);
 }
 

@@ -16,14 +16,14 @@ const router = new VueRouter({
     // 访问url为 / 时，重定向到 /index
     {
       path: '/',
-      redirect :'/index'
+      redirect :'/book'
     },
     // 登录页面
-    {
-      path: '/index',
-      name: 'Index',
-      component: () => import('../view/IndexPage.vue')
-    },
+    // {
+    //   path: '/index',
+    //   name: 'Index',
+    //   component: () => import('../view/IndexPage.vue')
+    // },
     // 用户设置页面
     {
       path: '/setting',
