@@ -48,7 +48,7 @@
 <script>
 
 import BookTable from '../components/BookTable';
-
+import { registerUser } from "../api/User";
 export default {
   data() {
     return {
@@ -58,6 +58,17 @@ export default {
 
   components: {
     BookTable
+  },
+
+  created() {
+    registerUser({
+    "code": "ABCD",
+    "userLoginName": "user",
+    "userName": "JiamaoW",
+    "userPassword": "123"
+    }).then(res => {
+      console.log(res);
+    })
   },
 
   methods: {
