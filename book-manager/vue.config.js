@@ -8,6 +8,11 @@ module.exports = defineConfig({
         target: process.env.VUE_APP_API_URL,
         changeOrigin: true,
         pathRewrite: { '/user': '/user' }
+      },
+      '/book': {
+        target: process.env.VUE_APP_API_URL,
+        changeOrigin: true,
+        pathRewrite: { '/book': '/book' }
       }
     }
   }

@@ -40,8 +40,8 @@
     </div>
 
     <!-- 页面底部区域 -->
-    <div class="book-list-footer">
-      Book Manager System By AAA
+    <div class="book-list-footer" :class="{'red-text' :userType === undefined ,'manager-text' :userType === 1 , 'student-text': userType === 0}">
+      {{ userTypeMsg }}
     </div>
     <LoginDialog ref="loginDialog" @loginSucess="loginSucess"/>
   </div>
@@ -58,6 +58,7 @@ export default {
       nickName: 'USER',
       isLogin: false,
       userType: undefined,
+      userTypeMsg: 'Please login'
     }
   },
 
@@ -68,6 +69,18 @@ export default {
 
   created() {
 
+  },
+
+  watch: {
+    userType(value) {
+      if (value === 0) {
+        this.userTypeMsg = 'STUDENT';
+      } else if (value === 1) {
+        this.userTypeMsg = 'MANAGER';
+      } else {
+        this.userTypeMsg = 'Please login';
+      }
+    }
   },
 
   methods: {
@@ -155,10 +168,25 @@ export default {
  }
  .book-list-footer {
   height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
  }
 
  .w-h-100 {
   width: 100%;
   height: 100%;
+ }
+
+ .red-text {
+  color: red;
+  font-weight: bold;
+  font-size: xx-large;
+ }
+ .manager-text {
+  color: orange;
+ }
+ .student-text {
+  color: green;
  }
 </style>

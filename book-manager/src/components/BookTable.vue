@@ -2,7 +2,7 @@
 <!-- 书籍列表页面 -->
   <div class="book-inner">
     <!-- 书籍列表页面左侧的两个子页签 PAPER 和 BOOK -->
-    <div class="b-r-1 w-120">
+    <!-- <div class="b-r-1 w-120">
       <el-menu
         default-active="3"
         class="el-menu-vertical-demo"
@@ -17,8 +17,8 @@
           <span slot="title">BOOK</span>
         </el-menu-item>
       </el-menu>
-    </div>
-    <div class="f-1 padding-8-12">
+    </div> -->
+    <div class="f-1 padding-8-12" style="height: 100%;">
       <div class="table-header">
          <!-- 高级搜索按钮 -->
         <el-button @click="drawer = true" type="primary" round style="margin-left: 16px; height: 40px;">
@@ -30,35 +30,48 @@
 <!-- 展示书籍信息的表格 -->
       <el-table
         :data="tableData"
-        height="100%"
+        height="calc(100% - 105px)"
         style="width: 100%;"
         @cell-dblclick="tableCellDbClick">
-         <template slot="empty">
-            <p>NOT FOUND DATA</p>
-          </template>
         <el-table-column
-          prop="name"
+          prop="bookName"
           label="Name"
           width="180">
         </el-table-column>
         <el-table-column
-          prop="author"
+          prop="bookAuthor"
           label="Author"
           width="80">
         </el-table-column>
         <el-table-column
-          prop="spec"
-          label="CLASSIFY"
+          prop="bookLocation"
+          label="Location"
           width="180">
         </el-table-column>
         <el-table-column
-          prop="info"
+          prop="bookDesc"
           label="INFO">
           <template slot="header">
             <p><strong>INFO</strong> <span style="font-size:12px; color:#E6A23C">Double click cell to view book details.</span></p>
           </template>
         </el-table-column>
       </el-table>
+      <!-- 分页 -->
+        <el-pagination
+          style="float: right; padding: 8px 20px"
+          :current-page.sync="currentPage"
+          :page-sizes="[10, 20, 50, 100]"
+          :page-size.sync="pageSize"
+          layout="total, prev, pager, next, sizes"
+          :total="total"
+          @size-change="getTableData"
+          @current-change="getTableData"
+          @prev-click="getTableData"
+          @next-click="getTableData"
+          >
+        </el-pagination>
+
+
       <!-- 高级搜索按钮点击后,弹出的抽屉 -->
       <el-drawer
         title="ADVANCED SEARCH"
@@ -139,6 +152,9 @@
 <script>
 import { mock1, mock2 } from '../mock/mockData';
 import { hobby } from '../mock/hobbyMock';
+import { getBooks } from "../api/Book";
+import { Loading } from 'element-ui';
+
 export default {
   data() {
     return {
@@ -160,25 +176,29 @@ export default {
       isSearchByHobby: true,
       hobbys: [],
       userHobbys: ['Philosophy', 'Art', 'Safety science', 'Natural sciences', 'History'],
-
+      currentPage: 1,
+      pageSize: 10,
+      total: 100,
     }
   },
 
   created() {
     this.activeIndex = '3';
-    this.tableData = mock1;
+    this.tableData = this.getTableData();
     this.hobbys = hobby;
   },
 
   watch: {
     nameKeyWord(newVal) {
-      const data = this.activeIndex == 3 ? mock1 : mock2;
-      const value = newVal.toUpperCase();
-      if (value) {
-        this.tableData = data.filter(item => item.name.toUpperCase().indexOf(value) > -1);
-      } else {
-        this.tableData = data;
-      }
+      console.log(newVal);
+      
+      // const data = this.activeIndex == 3 ? mock1 : mock2;
+      // const value = newVal.toUpperCase();
+      // if (value) {
+      //   this.tableData = data.filter(item => item.name.toUpperCase().indexOf(value) > -1);
+      // } else {
+      //   this.tableData = data;
+      // }
     }
   },
 
@@ -238,6 +258,37 @@ export default {
         this.$router.replace({ name: 'details', params: { row: structuredClone(row)} });        
       }
       
+    },
+
+    getTableData() {
+      const loadingInstance = Loading.service({ 
+        fullscreen: true,
+        background: 'rgba(0, 0, 0, 0.5)',
+        text: 'Loading...',
+        spinner: 'el-icon-loading'
+        });
+
+      const params = this.getSearchParams();
+      getBooks(params).then(res => {
+        const resData = res.date;
+        this.tableData = resData.records;
+        this.total = resData.total
+      }).catch(error => {
+        this.tableData = [];
+        console.error(error);
+      }).finally(() => {
+        loadingInstance.close();
+      });
+    },
+    getSearchParams(){
+      const params = {
+        pageNum: this.currentPage,
+        pageSize: this.pageSize,
+      };
+      console.log('🚀 ~ getSearchParams ~ params.this.pageSize:', this.pageSize);
+      console.log('🚀 ~ getSearchParams ~ params.his.currentPage:', this.currentPage);
+      this.nameKeyWord !== '' && (params.name = this.nameKeyWord);
+      return params;
     }
   }
 }
@@ -264,7 +315,7 @@ export default {
   border-right: none;
 }
 .f-1 {
-  width: calc(100% - 120px);
+  width:100%;
 }
 .padding-8-12 {
   padding: 8px 12px;
