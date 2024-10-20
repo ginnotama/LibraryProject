@@ -29,7 +29,7 @@
     <div class="book-list-body">
       <!-- 页面中间部分 根据头部导航栏选中的activeIndex的值来决定显示哪个页面 -->
       <div v-show="activeIndex==='book'" class="w-h-100">
-        <BookTable/>
+        <BookTable :isLogin="isLogin"/>
       </div>
       <div v-show="activeIndex==='user'">
         USER

@@ -25,7 +25,7 @@
             ADVANCED SEARCH
         </el-button>
         <!-- 按名称搜索的搜索框 -->
-        <el-input style="width: 200px; padding: 8px 0;" v-model="nameKeyWord" placeholder="SEARCH BY NAME"></el-input>
+        <el-input style="width: 200px; padding: 8px 0;" v-model="nameKeyWord" placeholder="SEARCH BY NAME" @change="getTableData"></el-input>
       </div>
 <!-- 展示书籍信息的表格 -->
       <el-table
@@ -49,10 +49,30 @@
           width="180">
         </el-table-column>
         <el-table-column
+          label="Status"
+          width="180">
+          <template slot-scope="scope">
+            <span v-if="scope.row.bookStatus === 0">BOOROW</span>
+            <i v-if="scope.row.bookStatus === 1" class="el-icon-success" style="color: #67C23A;"></i>
+            <span v-if="scope.row.bookStatus === 1" style="margin-left: 10px">LENDING</span>
+            <i v-if="scope.row.bookStatus === 2" class="el-icon-error" style="color: #F56C6C;"></i>
+            <span v-if="scope.row.bookStatus === 2" style="margin-left: 10px">LOST</span>
+          </template>
+        </el-table-column>
+        <el-table-column
           prop="bookDesc"
           label="INFO">
-          <template slot="header">
+          <!-- <template slot="header">
             <p><strong>INFO</strong> <span style="font-size:12px; color:#E6A23C">Double click cell to view book details.</span></p>
+          </template> -->
+        </el-table-column>
+        <el-table-column
+          label="OPERATION"
+          width="180"
+          fixed="right"
+        >
+          <template slot-scope="scope">
+            <el-button type="text" :disabled="!(scope.row.bookStatus === 0) || !isLogin" @click="bookBorrow(scope.row)">BOOROWING</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -150,12 +170,20 @@
 </template>
 
 <script>
-import { mock1, mock2 } from '../mock/mockData';
+// import { mock1, mock2 } from '../mock/mockData';
 import { hobby } from '../mock/hobbyMock';
-import { getBooks } from "../api/Book";
+import { getBooks, updateBook } from "../api/Book";
 import { Loading } from 'element-ui';
+import { BOOK_STATUS } from "../const/Const";
 
 export default {
+
+  props: {
+    isLogin: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       activeIndex: '3',
@@ -189,8 +217,8 @@ export default {
   },
 
   watch: {
-    nameKeyWord(newVal) {
-      console.log(newVal);
+    // nameKeyWord(newVal) {
+      // console.log(newVal);
       
       // const data = this.activeIndex == 3 ? mock1 : mock2;
       // const value = newVal.toUpperCase();
@@ -199,21 +227,21 @@ export default {
       // } else {
       //   this.tableData = data;
       // }
-    }
+    // }
   },
 
   methods: {
     // handleSelect(key, keyPath) {
-    handleSelect(key) {
-      this.activeIndex = key;
-      if (key == 3) {
-        this.tableData = mock1;
-        this.nameKeyWord = '';
-      } else {
-        this.tableData = mock2;
-        this.nameKeyWord = '';
-      }
-    },
+    // handleSelect(key) {
+    //   this.activeIndex = key;
+    //   if (key == 3) {
+    //     this.tableData = mock1;
+    //     this.nameKeyWord = '';
+    //   } else {
+    //     this.tableData = mock2;
+    //     this.nameKeyWord = '';
+    //   }
+    // },
     drawOpen() {
       this.drawerKeyWord.selectedHobbys = structuredClone(this.userHobbys);
     },
@@ -285,10 +313,46 @@ export default {
         pageNum: this.currentPage,
         pageSize: this.pageSize,
       };
-      console.log('🚀 ~ getSearchParams ~ params.this.pageSize:', this.pageSize);
-      console.log('🚀 ~ getSearchParams ~ params.his.currentPage:', this.currentPage);
       this.nameKeyWord !== '' && (params.name = this.nameKeyWord);
       return params;
+    },
+
+    bookBorrow(currentBook) {
+      this.$confirm(`Are you sure to check out books: ${currentBook.bookName}`, 'Confirmation information', {
+          distinguishCancelAndClose: true,
+          confirmButtonText: 'OK',
+          cancelButtonText: 'CANCEL'
+        })
+        .then(() => {
+          // TODO: 借书逻辑
+          const deepClonedCurrentBook = structuredClone(currentBook);
+          deepClonedCurrentBook.bookStatus = BOOK_STATUS.BORROWED;
+          updateBook(deepClonedCurrentBook).then(res => {
+            console.log(res);
+            this.$message({
+              type: 'success',
+              message: 'Borrowing success !'
+            });
+            currentBook.bookStatus = BOOK_STATUS.BORROWED;
+          }).catch(error => {
+            console.error(error);
+            this.$message({
+              type: 'error',
+              message: 'Borrowing failed !'
+            });
+          });
+        })
+        .catch(action => {
+          console.log(action);          
+          // this.$message({
+          //   type: 'info',
+          //   message: action === 'cancel'
+          //     ? '11'
+          //     : '22'
+          // })
+        });
+      console.log(currentBook);
+      
     }
   }
 }
