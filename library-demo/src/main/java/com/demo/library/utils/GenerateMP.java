@@ -8,6 +8,9 @@ import com.baomidou.mybatisplus.generator.config.PackageConfig;
 import com.baomidou.mybatisplus.generator.config.StrategyConfig;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 
+/**
+ * @author yogurt
+ */
 public class GenerateMP {
 
     public static void main(String[] args) {

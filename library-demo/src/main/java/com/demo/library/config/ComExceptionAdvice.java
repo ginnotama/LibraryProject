@@ -20,7 +20,7 @@ import java.util.List;
 public class ComExceptionAdvice  {
     @ExceptionHandler(Exception.class)
     public Result<?> commonExceptionHandler(Exception e){
-        log.error(e.getMessage(), e);
+        log.info(e.getMessage(), e);
         return Result.error("服务器异常, 请稍后在试~");
     }
 
@@ -31,9 +31,9 @@ public class ComExceptionAdvice  {
             List<ObjectError> errors = bindingResult.getAllErrors();
             if(!errors.isEmpty()){
                 log.info("请求参数异常", errors.get(0).getDefaultMessage());
-                return Result.error( errors.get(0).getDefaultMessage());
+                return Result.error(errors.get(0).getDefaultMessage());
             }
         }
-        return Result.error();
+        return Result.error("请求类型或参数异常");
     }
 }
