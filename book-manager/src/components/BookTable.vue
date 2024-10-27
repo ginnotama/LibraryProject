@@ -67,6 +67,16 @@
           </template> -->
         </el-table-column>
         <el-table-column
+          v-if="isLogin"
+          label="COMPONENT"
+          width="180"
+          fixed="right"
+        >
+          <template slot-scope="scope">
+            <el-button type="text" @click="searchComponent(scope.row)" >View comments</el-button>
+          </template>
+        </el-table-column>
+        <el-table-column
           label="OPERATION"
           width="180"
           fixed="right"
@@ -166,6 +176,7 @@
         </div>
       </el-drawer>
     </div>
+    <BookComponentVue ref="bookComponent" :currentBookInfo=currentBookInfo />
   </div>
 </template>
 
@@ -175,8 +186,12 @@ import { hobby } from '../mock/hobbyMock';
 import { getBooks, updateBook } from "../api/Book";
 import { Loading } from 'element-ui';
 import { BOOK_STATUS } from "../const/Const";
+import BookComponentVue from './BookComponent.vue';
 
 export default {
+  components: {
+    BookComponentVue
+  },
 
   props: {
     isLogin: {
@@ -207,6 +222,7 @@ export default {
       currentPage: 1,
       pageSize: 10,
       total: 100,
+      currentBookInfo: {}
     }
   },
 
@@ -353,6 +369,10 @@ export default {
         });
       console.log(currentBook);
       
+    },
+    searchComponent(row) {
+      this.currentBookInfo = row;
+      this.$refs.bookComponent.changeVisible(true);
     }
   }
 }

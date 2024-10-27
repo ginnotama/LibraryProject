@@ -29,12 +29,21 @@
             <span v-if="scope.row.borrowState === 1">Borrowing completed</span>
           </template>
         </el-table-column>
+        <el-table-column
+          label="COMPONENT"
+          width="180"
+          fixed="right"
+        >
+          <template slot-scope="scope">
+            <el-button type="text" @click="searchComponent(scope.row)" >View comments</el-button>
+          </template>
+        </el-table-column>
 
         <el-table-column 
           label="OPERATE"
           fixed="right">
           <template slot-scope="scope">
-            <el-button type="text" :disabled="!(scope.row.borrowState === 0)" @click="returnBook(scope.row)">RETURN BOOK</el-button>
+            <el-button type="text" :disabled="!(scope.row.borrowState === 0)" @click="openReturnDialog(scope.row)">RETURN BOOK</el-button>
           </template>
         </el-table-column>
 
@@ -62,6 +71,28 @@
           @next-click="getTableData"
           >
         </el-pagination>
+    <BookComponentVue ref="bookComponent" :currentBookInfo=currentBookInfo />
+
+    <el-dialog
+      title="RETURN"
+      :visible.sync="dialogVisible"
+      width="40%"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      @open="returnDialogOpen"
+      >
+        <el-input
+          type="textarea"
+          :rows="8"
+          placeholder="Please fill in a comment for this book"
+          v-model="textarea">
+        </el-input>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">CANCEL</el-button>
+        <el-button type="primary" @click="returnBook">RETURN BOOK</el-button>
+      </span>
+    </el-dialog>
+
   </div>
 
 </template>
@@ -69,6 +100,8 @@
 <script>
 import { Loading } from 'element-ui';
 import { getBorrows, returnBook } from '../api/Borrow';
+import BookComponentVue from './BookComponent.vue';
+
 export default {
   props: {
     userInfo: {
@@ -76,6 +109,10 @@ export default {
       default: () => ({})
     }
   },
+  components: {
+    BookComponentVue
+  },
+
 
   data() {
     return {
@@ -83,6 +120,9 @@ export default {
       currentPage: 1,
       pageSize: 10,
       total: 0,
+      currentBookInfo: {},
+      dialogVisible: false,
+      textarea: ''
     }
   },
 
@@ -92,6 +132,21 @@ export default {
   },
 
   methods: {
+    returnDialogOpen() {
+      this.textarea = '';
+    },
+
+
+    openReturnDialog(row) {
+      this.dialogVisible = true;
+      this.currentBookInfo = row;
+
+    },
+
+    searchComponent(row) {
+      this.currentBookInfo = row;
+      this.$refs.bookComponent.changeVisible(true);
+    },
     getTableData() {
       const loadingInstance = Loading.service({ 
         fullscreen: true,
@@ -120,17 +175,18 @@ export default {
       })
     },
 
-    returnBook(row) {
+    returnBook() {
       returnBook({
-        bookId: row.bookId,
-        borrowId: row.borrowId,
-        userId: row.userId,
+        bookId: this.currentBookInfo.bookId,
+        borrowId: this.currentBookInfo.borrowId,
+        userId: this.currentBookInfo.userId,
       }).then(res => {
         if (res.code == 200) {
           this.$message({
             type: 'success',
             message: 'Return success !'
           });
+          this.dialogVisible = false;
           this.getTableData();
         } else {
           this.$message({
@@ -150,6 +206,8 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+::v-deep .el-dialog__header {
+  display: flex;
+}
 </style>

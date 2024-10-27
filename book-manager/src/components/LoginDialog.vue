@@ -244,10 +244,10 @@ export default {
 .flex-box {
   display: flex !important;
 }
-/deep/ .el-dialog__header {
+::v-deep .el-dialog__header {
   display: flex;
 }
-/deep/ .el-dialog__body {
+::v-deep .el-dialog__body {
   padding-top: 10px;
   padding-bottom: 0px;
 }
