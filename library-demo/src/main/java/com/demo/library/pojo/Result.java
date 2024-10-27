@@ -2,7 +2,6 @@ package com.demo.library.pojo;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.springframework.validation.annotation.Validated;
 
 /**
  * @author : yogurt-z
@@ -42,5 +41,8 @@ public class Result <T> {
     }
     public static <D> Result<D>  error(){
         return new Result<>(RetCode.ERROR);
+    }
+    public static <D> Result<D>  error(RetCode code){
+        return new Result<>(code);
     }
 }

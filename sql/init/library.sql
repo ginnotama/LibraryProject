@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS `borrow`(
 `borrow_state` INT(10) NOT NULL COMMENT '借阅状态 1 借阅完成 0 借阅中',
 `borrow_date` datetime NOT NULL COMMENT '借阅时间',
 `end_date` datetime NOT NULL COMMENT '截止时间',
-`return_date` datetime NOT NULL COMMENT '归还时间',
+`return_date` datetime  COMMENT '归还时间',
 `create_time` datetime NOT NULL COMMENT '创建时间',
  PRIMARY KEY (`borrow_id`) USING BTREE,
  KEY `book_id` (`book_id`) USING BTREE,

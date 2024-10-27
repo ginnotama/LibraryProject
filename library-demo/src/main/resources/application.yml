@@ -2,11 +2,15 @@ springapplication:
   name: library
 
 spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/library
     username: root
     password: root
+
 logging:
   level:
     root: info
