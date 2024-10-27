@@ -13,6 +13,11 @@ module.exports = defineConfig({
         target: process.env.VUE_APP_API_URL,
         changeOrigin: true,
         pathRewrite: { '/book': '/book' }
+      },
+      '/borrow': {
+        target: process.env.VUE_APP_API_URL,
+        changeOrigin: true,
+        pathRewrite: { '/borrow': '/borrow' }
       }
     }
   }

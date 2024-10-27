@@ -5,9 +5,9 @@
       <div class="header-left">
         <!-- 定义了三个头部导航栏  BOOK SEARCH BORROW和USER-->
         <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-          <el-menu-item index="book">BOOK SEARCH</el-menu-item>
-          <el-menu-item index="brrow">BORROW</el-menu-item>
-          <el-menu-item index="user">USER</el-menu-item>
+          <el-menu-item index="book">Book List</el-menu-item>
+          <el-menu-item v-show="isLogin" index="returnBook">My Borrowing Information</el-menu-item>
+          <el-menu-item v-show="isLogin && userType === 1" index="user">MANAGER</el-menu-item>
         </el-menu>
       </div>
       <div class="header-right">
@@ -28,14 +28,14 @@
 
     <div class="book-list-body">
       <!-- 页面中间部分 根据头部导航栏选中的activeIndex的值来决定显示哪个页面 -->
-      <div v-show="activeIndex==='book'" class="w-h-100">
+      <div v-if="activeIndex==='book'" class="w-h-100">
         <BookTable :isLogin="isLogin"/>
       </div>
-      <div v-show="activeIndex==='user'">
+      <div v-if="activeIndex==='user'">
         USER
       </div>
-      <div v-show="activeIndex==='brrow'">
-        BORROW
+      <div v-if="activeIndex==='returnBook'" style="height:100%">
+        <BookReturnVue :userInfo="userInfo"/>
       </div>
     </div>
 
@@ -48,23 +48,26 @@
 </template>
 
 <script>
+// import BookReturnVue from '../components/BookReturn.vue';
 
-import BookTable from '../components/BookTable';
+// import BookTable from '../components/BookTable';
 import LoginDialog from "../components/LoginDialog.vue";
 export default {
   data() {
     return {
       activeIndex: 'book',
       nickName: 'USER',
-      isLogin: false,
+      isLogin: true,
       userType: undefined,
-      userTypeMsg: 'Please login'
+      userTypeMsg: 'Please login',
+      userInfo: {}
     }
   },
 
   components: {
-    BookTable,
-    LoginDialog
+    BookTable: () => import('../components/BookTable'),
+    LoginDialog,
+    BookReturnVue: () => import('../components/BookReturn.vue'),
   },
 
   created() {
@@ -103,6 +106,7 @@ export default {
         this.isLogin = false;
         this.userType = undefined;
         this.nickName = 'USER';
+         this.userInfo = {};
         this.$message({
           message: 'Logout success',
           type: 'success'
@@ -116,8 +120,10 @@ export default {
     },
 
     loginSucess(data) {
+      console.log(data);
       this.nickName = data.userName;
       this.userType = data.userType;
+      this.userInfo = data;
       this.isLogin = true;
       this.$refs.loginDialog.changeVisibel(false);
       this.$message({
@@ -165,6 +171,7 @@ export default {
  .book-list-body {
   width: 100%;
   height: calc(100% - 120px);
+    /* box-shadow: 2px 4px 0 rgba(0,0,0,.05); */
  }
  .book-list-footer {
   height: 60px;
