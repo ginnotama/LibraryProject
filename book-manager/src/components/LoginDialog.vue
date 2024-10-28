@@ -135,7 +135,7 @@ export default {
       getCode().then(res => {
         this.imageUrl = URL.createObjectURL(res);
         // FIXME: 暂时用一张图片代替
-        this.imageUrl = require('@/assets/19101535287992295316826338.jpg');
+        // this.imageUrl = require('@/assets/19101535287992295316826338.jpg');
         console.log('刷新验证码');
       }).catch((error) => {
         console.error(error);
