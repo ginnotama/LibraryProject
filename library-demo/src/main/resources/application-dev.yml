@@ -1,0 +1,7 @@
+db:
+  host: localhost
+  pw: root
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 输出 SQL 日志到控制台

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.demo.library.dto.BorrowDTO;
+import com.demo.library.dto.BorrowWithNameDTO;
 import com.demo.library.dto.QueryBorrowDTO;
 import com.demo.library.enums.BookState;
 import com.demo.library.enums.BorrowState;
@@ -17,6 +18,7 @@ import com.demo.library.service.impl.BorrowServiceImpl;
 import com.demo.library.service.impl.UserServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -26,6 +28,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -109,7 +113,7 @@ public class BorrowController {
 
     @PostMapping("getBorrows")
     @ApiOperation(value = "查询借阅信息", notes = "查询借阅信息(支持传入用户id或书籍id, 单独查询某个用户所有借阅信息或某本书籍所有借阅信息)")
-    public Result<IPage<Borrow>> getBorrows(@RequestBody @Validated QueryBorrowDTO queryBorrowDTO){
+    public Result<IPage<BorrowWithNameDTO>> getBorrows(@RequestBody @Validated QueryBorrowDTO queryBorrowDTO){
         LambdaQueryWrapper<Borrow> borrowWrapper = new LambdaQueryWrapper<>();
         if(queryBorrowDTO.getUserId() != null){
             borrowWrapper.eq(Borrow::getUserId  ,queryBorrowDTO.getUserId());
@@ -121,8 +125,30 @@ public class BorrowController {
 
         IPage<Borrow> page = new Page<>(Integer.parseInt(queryBorrowDTO.getPageNum()),Integer.parseInt( queryBorrowDTO.getPageSize()));
         page = borrowService.page(page, borrowWrapper);
+        List<Borrow> borrows = page.getRecords();
 
-        return Result.success(page);
+        ArrayList<BorrowWithNameDTO> borrowDTOList= new ArrayList<>();
+
+        for (Borrow borrow : borrows) {
+            BorrowWithNameDTO borrowWithNameDTO = new BorrowWithNameDTO();
+            BeanUtils.copyProperties(borrow, borrowWithNameDTO);
+
+            Long bookId = borrow.getBookId();
+            Book book = bookService.getById(bookId);
+            borrowWithNameDTO.setBookName(book.getBookName());
+
+            borrowDTOList.add(borrowWithNameDTO);
+        }
+
+        IPage<BorrowWithNameDTO> withNameDTOPage = new Page<>();
+        withNameDTOPage.setRecords(borrowDTOList);
+        withNameDTOPage.setPages(page.getPages());
+        withNameDTOPage.setCurrent(page.getCurrent());
+        withNameDTOPage.setSize(page.getSize());
+        withNameDTOPage.setTotal(page.getTotal());
+
+        return Result.success(withNameDTOPage);
+
     }
 }
 

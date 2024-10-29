@@ -48,6 +48,7 @@ public class CommentController {
     UserServiceImpl userService;
 
     @PostMapping("/addComment")
+    @ApiOperation(value = "发布评论信息", notes = "发布评论信息)")
     public Result<?> addComment(@RequestBody @Validated Comment comment){
         comment.setCommentId(null);
         User user = userService.getById(comment.getUserId());
