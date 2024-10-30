@@ -183,10 +183,11 @@
 <script>
 // import { mock1, mock2 } from '../mock/mockData';
 import { hobby } from '../mock/hobbyMock';
-import { getBooks, updateBook } from "../api/Book";
+import { getBooks } from "../api/Book";
 import { Loading } from 'element-ui';
 import { BOOK_STATUS } from "../const/Const";
 import BookComponentVue from './BookComponent.vue';
+import { addBorrow } from '../api/Borrow';
 
 export default {
   components: {
@@ -197,6 +198,10 @@ export default {
     isLogin: {
       type: Boolean,
       default: false
+    },
+    userInfo: {
+      type: Object,
+      default: () => ({})
     }
   },
   data() {
@@ -343,8 +348,15 @@ export default {
           // TODO: 借书逻辑
           const deepClonedCurrentBook = structuredClone(currentBook);
           deepClonedCurrentBook.bookStatus = BOOK_STATUS.BORROWED;
-          updateBook(deepClonedCurrentBook).then(res => {
+          // eslint-disable-next-line no-debugger
+          debugger
+          addBorrow({
+            bookId: deepClonedCurrentBook.bookId,
+            userId: this.userInfo.userId,
+            endDate: this.getDate()
+          }).then(res => {
             console.log(res);
+            this.getTableData();
             this.$message({
               type: 'success',
               message: 'Borrowing success !'
@@ -370,6 +382,38 @@ export default {
       console.log(currentBook);
       
     },
+
+    getDate() {
+      // 解析日期字符串
+      let date = new Date();
+      
+      // 获取当前日期的年份、月份、日、时、分、秒
+      let year = date.getFullYear();
+      let month = date.getMonth(); // 注意：月份是从0开始计数的，0代表1月
+      let day = date.getDate();
+      let hours = date.getHours();
+      let minutes = date.getMinutes();
+      let seconds = date.getSeconds();
+
+      // 设置日期为当前日期加上一个月
+      date.setMonth(month + 1);
+
+      // 如果设置的日期超过了目标月份的最大天数，则调整为该月的最大天数
+      let maxDay = new Date(year, month + 1, 0).getDate(); // 获取下个月的最大天数
+      if (day > maxDay) {
+          day = maxDay;
+          date.setDate(day);
+      }
+
+      // 设置时间部分
+      date.setHours(hours);
+      date.setMinutes(minutes);
+      date.setSeconds(seconds);
+
+      // 返回格式化后的日期字符串
+      return date.toISOString().slice(0, -1); // 使用toISOString()方法格式化日期，并去掉最后的Z
+    },
+
     searchComponent(row) {
       this.currentBookInfo = row;
       this.$refs.bookComponent.changeVisible(true);

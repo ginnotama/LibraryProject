@@ -170,6 +170,7 @@ export default {
             message: 'Login failed',
             type: 'error'
           });
+          this.refreshCode();
         })
       }
 

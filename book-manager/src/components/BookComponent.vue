@@ -8,11 +8,14 @@
       :close-on-press-escape="false"
       @open="componentDialogOpen"
       >
-      <div v-for="(value, key) in componentList" :key="key" class="component-item flex-box">
+      <div v-show="componentList.length !== 0" v-for="(value, key) in componentList" :key="key" class="component-item flex-box">
         <div class="padding-8" style="padding-bottom: 0px">
-          {{value.data}}
+          {{value.commentDesc}}
         </div>
-        <div class="padding-8">{{value.name}}</div>
+        <div class="padding-8">{{value.commentCreateTime}}</div>
+      </div>
+      <div v-show="componentList.length === 0" >
+        No Comments
       </div>
       <!-- <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
@@ -23,6 +26,7 @@
 </template>
 
 <script>
+import { getComments } from "../api/Comment";
 export default {
   props:{
     currentBookInfo: {
@@ -33,24 +37,7 @@ export default {
   data() {
     return {
       dialogVisible: false,
-      componentList: [
-        {
-          data: '123',
-          name: '11'
-        },
-        {
-          data: 'aaa',
-          name: '22'
-        },
-                {
-          data: 'aaa',
-          name: '22'
-        },
-                {
-          data: 'aaa',
-          name: '22'
-        },
-      ]
+      componentList: []
     }
   },
 
@@ -58,7 +45,22 @@ export default {
     changeVisible(value) {
       this.dialogVisible = value;
     },
+    getCommentList() {
+      getComments({
+        bookId: this.currentBookInfo.bookId,
+        pageNum: 1,
+        pageSize: 10000
+      }).then(res => {
+        if (res.code == 200) {
+          this.componentList = res.date.records;
+        }
+      }).catch(error => {
+        this.componentList = [];
+        console.error(error);
+      })
+    },
     componentDialogOpen() {
+      this.getCommentList();
       console.log('打开弹窗', this.currentBookInfo);
       
     }

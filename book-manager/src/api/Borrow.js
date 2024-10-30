@@ -3,3 +3,4 @@ const moduleName = "borrow";
 
 export const getBorrows = (params) => apiPost(`/${moduleName}/getBorrows`, null, params);
 export const returnBook = (params) => apiPost(`/${moduleName}/returnBook`, null, params);
+export const addBorrow = (params) => apiPost(`/${moduleName}/addBorrow`, null, params);

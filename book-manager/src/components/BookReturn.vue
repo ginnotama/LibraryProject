@@ -100,6 +100,7 @@
 <script>
 import { Loading } from 'element-ui';
 import { getBorrows, returnBook } from '../api/Borrow';
+import { addComment } from '../api/Comment';
 import BookComponentVue from './BookComponent.vue';
 
 export default {
@@ -161,6 +162,10 @@ export default {
       }).then(res => {
         if (res.code == 200) {
           this.bookList = res.date.records;
+          // this.bookList = [{
+          //   bookId: 4,
+          //   borrowState: 0
+          // }]
           this.total = res.date.total;
         } else {
           this.bookList = [];
@@ -176,6 +181,13 @@ export default {
     },
 
     returnBook() {
+      if (this.textarea) {
+        addComment({
+          bookId: this.currentBookInfo.bookId,
+          commentDesc: this.textarea,
+          userId: this.userInfo.userId
+        });
+      }
       returnBook({
         bookId: this.currentBookInfo.bookId,
         borrowId: this.currentBookInfo.borrowId,

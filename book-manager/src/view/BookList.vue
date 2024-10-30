@@ -29,10 +29,10 @@
     <div class="book-list-body">
       <!-- 页面中间部分 根据头部导航栏选中的activeIndex的值来决定显示哪个页面 -->
       <div v-if="activeIndex==='book'" class="w-h-100">
-        <BookTable :isLogin="isLogin"/>
+        <BookTable :isLogin="isLogin" :userInfo="userInfo"/>
       </div>
-      <div v-if="activeIndex==='user'">
-        USER
+      <div v-if="activeIndex==='user'" style="height:100%; overflow-y: scroll;">
+        <AddBookVue />
       </div>
       <div v-if="activeIndex==='returnBook'" style="height:100%">
         <BookReturnVue :userInfo="userInfo"/>
@@ -57,7 +57,7 @@ export default {
     return {
       activeIndex: 'book',
       nickName: 'USER',
-      isLogin: true,
+      isLogin: false,
       userType: undefined,
       userTypeMsg: 'Please login',
       userInfo: {}
@@ -68,6 +68,7 @@ export default {
     BookTable: () => import('../components/BookTable'),
     LoginDialog,
     BookReturnVue: () => import('../components/BookReturn.vue'),
+    AddBookVue: () => import('../components/AddBook.vue')
   },
 
   created() {
@@ -106,6 +107,7 @@ export default {
         this.isLogin = false;
         this.userType = undefined;
         this.nickName = 'USER';
+        this.activeIndex = 'book';
          this.userInfo = {};
         this.$message({
           message: 'Logout success',
