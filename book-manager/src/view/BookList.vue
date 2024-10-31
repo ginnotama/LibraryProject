@@ -19,7 +19,7 @@
           <!-- 鼠标悬浮到用户头像上时，展示的两个下拉选项 SETTING和QUIT -->
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item v-show="!isLogin" icon="el-icon-s-home" command="login">LOGIN</el-dropdown-item>
-            <el-dropdown-item icon="el-icon-setting" command="setting" :disabled="!isLogin">SETTING</el-dropdown-item>
+            <!-- <el-dropdown-item icon="el-icon-setting" command="setting" :disabled="!isLogin">SETTING</el-dropdown-item> -->
             <el-dropdown-item v-show="isLogin" icon="el-icon-back" command="quit">QUIT</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -104,15 +104,16 @@ export default {
       
       // 选中quit 则跳转到登录页面
       if (command === 'quit') {
-        this.isLogin = false;
-        this.userType = undefined;
-        this.nickName = 'USER';
-        this.activeIndex = 'book';
-         this.userInfo = {};
-        this.$message({
-          message: 'Logout success',
-          type: 'success'
-        });
+        // this.isLogin = false;
+        // this.userType = undefined;
+        // this.userInfo = {};
+        // this.nickName = 'USER';
+        // this.activeIndex = 'book';
+        location.reload()
+        // this.$message({
+        //   message: 'Logout success',
+        //   type: 'success'
+        // });
       }
       // 选中setting 跳转到设置页面
       if (command === 'setting') {

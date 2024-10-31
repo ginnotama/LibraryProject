@@ -9,10 +9,10 @@
       @open="componentDialogOpen"
       >
       <div v-show="componentList.length !== 0" v-for="(value, key) in componentList" :key="key" class="component-item flex-box">
-        <div class="padding-8" style="padding-bottom: 0px">
+        <div class="padding-8" style="padding-bottom: 0px; display: flex; line-height: 1.3;">
           {{value.commentDesc}}
         </div>
-        <div class="padding-8">{{value.commentCreateTime}}</div>
+        <div class="padding-8 flex-end" >userId: {{value.userId}}  comment time: {{value.commentCreateTime}}</div>
       </div>
       <div v-show="componentList.length === 0" >
         No Comments
@@ -27,6 +27,8 @@
 
 <script>
 import { getComments } from "../api/Comment";
+import { formatDate } from "../Utils/util";
+
 export default {
   props:{
     currentBookInfo: {
@@ -52,6 +54,9 @@ export default {
         pageSize: 10000
       }).then(res => {
         if (res.code == 200) {
+          res.date.records.forEach(element => {
+            element.commentCreateTime = formatDate(element.commentCreateTime);
+          });
           this.componentList = res.date.records;
         }
       }).catch(error => {
@@ -96,5 +101,10 @@ export default {
 .padding-8 {
 
   padding: 8px
+}
+
+.flex-end {
+  display: flex;
+  justify-content: flex-end;
 }
 </style>

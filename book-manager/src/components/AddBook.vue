@@ -5,7 +5,7 @@
         <el-form-item label="BOOK NAME" prop="bookName">
           <el-input v-model="form.bookName"></el-input>
         </el-form-item>
-        <el-form-item label="BOOK NUM" prop="bookNum">
+        <el-form-item label="BOOK INDEX" prop="bookNum">
           <el-input v-model="form.bookNum"></el-input>
         </el-form-item>
         <el-form-item label="BOOK LOCATION" prop="bookLocation">

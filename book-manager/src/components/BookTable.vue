@@ -21,9 +21,9 @@
     <div class="f-1 padding-8-12" style="height: 100%;">
       <div class="table-header">
          <!-- 高级搜索按钮 -->
-        <el-button @click="drawer = true" type="primary" round style="margin-left: 16px; height: 40px;">
+        <!-- <el-button @click="drawer = true" type="primary" round style="margin-left: 16px; height: 40px;">
             ADVANCED SEARCH
-        </el-button>
+        </el-button> -->
         <!-- 按名称搜索的搜索框 -->
         <el-input style="width: 200px; padding: 8px 0;" v-model="nameKeyWord" placeholder="SEARCH BY NAME" @change="getTableData"></el-input>
       </div>
@@ -82,7 +82,44 @@
           fixed="right"
         >
           <template slot-scope="scope">
-            <el-button type="text" :disabled="!(scope.row.bookStatus === 0) || !isLogin" @click="bookBorrow(scope.row)">BOOROWING</el-button>
+            <el-button type="text" :disabled="!isLogin || !(scope.row.bookStatus === 0)" @click="bookBorrow(scope.row)">BOOROWING</el-button>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="userInfo.userType === 1"
+          label="BORROW INFO"
+          width="125"
+          fixed="right"
+        >
+          <template slot-scope="scope">
+            <el-popover
+              placement="top"
+              width="400"
+              trigger="click">
+                <el-table :data="gridData" height="300px" v-loading="loading">
+                  <el-table-column width="120" property="userName" label="USER NAME"></el-table-column>
+                  <el-table-column width="100" label="STATUS" align="center">
+                    <template slot-scope="scope">
+                      <span style="font-size: 20px;">
+                        <i v-if="scope.row.borrowState === 0" class="el-icon-folder-checked" style="color: #67C23A"></i>
+                        <i v-if="scope.row.borrowState === 1" class="el-icon-folder-opened" style="color: #E6A23C"></i>
+                      </span>
+                    </template>
+                  </el-table-column>
+
+                  <el-table-column width="150" property="returnDate" label="RETURN TIME"></el-table-column>
+                </el-table>
+              <!-- <el-descriptions title="BOOROWING INFO" >
+                <el-descriptions-item label="用户名">kooriookami</el-descriptions-item>
+                <el-descriptions-item label="手机号">18100000000</el-descriptions-item>
+                <el-descriptions-item label="居住地">苏州市</el-descriptions-item>
+                <el-descriptions-item label="备注">
+                  <el-tag size="small">学校</el-tag>
+                </el-descriptions-item>
+                <el-descriptions-item label="联系地址">江苏省苏州市吴中区吴中大道 1188 号</el-descriptions-item>
+              </el-descriptions> -->
+              <el-button slot="reference" type="info" round :disabled="scope.row.bookStatus === 0" @click="check(scope.row)">CHECK</el-button>
+            </el-popover>
           </template>
         </el-table-column>
       </el-table>
@@ -187,7 +224,8 @@ import { getBooks } from "../api/Book";
 import { Loading } from 'element-ui';
 import { BOOK_STATUS } from "../const/Const";
 import BookComponentVue from './BookComponent.vue';
-import { addBorrow } from '../api/Borrow';
+import { addBorrow, getBorrows } from '../api/Borrow';
+import { formatDate } from "../Utils/util";
 
 export default {
   components: {
@@ -227,7 +265,9 @@ export default {
       currentPage: 1,
       pageSize: 10,
       total: 100,
-      currentBookInfo: {}
+      currentBookInfo: {},
+      loading: false,
+      gridData: []
     }
   },
 
@@ -348,8 +388,6 @@ export default {
           // TODO: 借书逻辑
           const deepClonedCurrentBook = structuredClone(currentBook);
           deepClonedCurrentBook.bookStatus = BOOK_STATUS.BORROWED;
-          // eslint-disable-next-line no-debugger
-          debugger
           addBorrow({
             bookId: deepClonedCurrentBook.bookId,
             userId: this.userInfo.userId,
@@ -417,6 +455,35 @@ export default {
     searchComponent(row) {
       this.currentBookInfo = row;
       this.$refs.bookComponent.changeVisible(true);
+    },
+
+    check(row) {
+      this.loading = true;
+      getBorrows({
+        pageSize: 1,
+        pageNum: 10000,
+        bookId: row.bookId
+      }).then(res => {
+        if (res.code == 200) {
+           res.date.records.forEach(element => {
+            element.borrowDate && (element.borrowDate = formatDate(element.borrowDate));
+            element.returnDate && (element.returnDate = formatDate(element.returnDate));
+          });
+          this.gridData = res.date.records;
+        } else {
+          this.gridData = [];
+        }
+        this.loading = false;
+      }).catch(e => {
+        this.gridData = [];
+        console.error(e);
+        this.loading = false;
+        this.$message({
+          type: 'error',
+          message: 'Checking failed !'
+        });
+      })
+      
     }
   }
 }

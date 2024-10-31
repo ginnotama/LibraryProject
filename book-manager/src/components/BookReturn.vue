@@ -6,6 +6,11 @@
         style="width: 100%;"
         >
         <el-table-column
+          prop="bookName"
+          label="BOOK NAME"
+          width="180">
+        </el-table-column>
+        <el-table-column
           prop="bookId"
           label="BOOK ID"
           width="180">
@@ -13,7 +18,7 @@
         <el-table-column
           prop="borrowDate"
           label="BORROW DATE"
-          width="80">
+          width="180">
         </el-table-column>
         <el-table-column
           prop="returnDate"
@@ -102,7 +107,7 @@ import { Loading } from 'element-ui';
 import { getBorrows, returnBook } from '../api/Borrow';
 import { addComment } from '../api/Comment';
 import BookComponentVue from './BookComponent.vue';
-
+import { formatDate } from "../Utils/util";
 export default {
   props: {
     userInfo: {
@@ -161,6 +166,10 @@ export default {
         userId: this.userInfo.userId
       }).then(res => {
         if (res.code == 200) {
+          res.date.records.forEach(element => {
+            element.borrowDate = formatDate(element.borrowDate);
+            element.returnDate = formatDate(element.returnDate);
+          });
           this.bookList = res.date.records;
           // this.bookList = [{
           //   bookId: 4,
