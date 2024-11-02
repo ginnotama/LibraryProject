@@ -119,7 +119,7 @@
                 </el-descriptions-item>
                 <el-descriptions-item label="联系地址">江苏省苏州市吴中区吴中大道 1188 号</el-descriptions-item>
               </el-descriptions> -->
-              <el-button slot="reference" type="info" round :disabled="scope.row.bookStatus === 0" @click="check(scope.row)">CHECK</el-button>
+              <el-button slot="reference" type="info" round @click="check(scope.row)">CHECK</el-button>
             </el-popover>
           </template>
         </el-table-column>

@@ -12,7 +12,7 @@
         <div class="padding-8" style="padding-bottom: 0px; display: flex; line-height: 1.3;">
           {{value.commentDesc}}
         </div>
-        <div class="padding-8 flex-end" >userId: {{value.userId}}  comment time: {{value.commentCreateTime}}</div>
+        <div class="padding-8 flex-end" >userName: {{value.userName}}  comment time: {{value.commentCreateTime}}</div>
       </div>
       <div v-show="componentList.length === 0" >
         No Comments
