@@ -101,13 +101,14 @@
                   <el-table-column width="100" label="STATUS" align="center">
                     <template slot-scope="scope">
                       <span style="font-size: 20px;">
-                        <i v-if="scope.row.borrowState === 0" class="el-icon-folder-checked" style="color: #67C23A"></i>
-                        <i v-if="scope.row.borrowState === 1" class="el-icon-folder-opened" style="color: #E6A23C"></i>
+                        <i v-if="scope.row.borrowState === 1" class="el-icon-folder-checked" style="color: #67C23A"></i>
+                        <i v-if="scope.row.borrowState === 0" class="el-icon-folder-opened" style="color: #E6A23C"></i>
                       </span>
                     </template>
                   </el-table-column>
 
-                  <el-table-column width="150" property="returnDate" label="RETURN TIME"></el-table-column>
+                  <el-table-column width="160" property="borrowDate" label="BORROW TIME"></el-table-column>
+                  <el-table-column width="160" property="returnDate" label="RETURN TIME"></el-table-column>
                 </el-table>
               <!-- <el-descriptions title="BOOROWING INFO" >
                 <el-descriptions-item label="用户名">kooriookami</el-descriptions-item>
@@ -460,8 +461,8 @@ export default {
     check(row) {
       this.loading = true;
       getBorrows({
-        pageSize: 1,
-        pageNum: 10000,
+        pageSize: 10000,
+        pageNum: 1,
         bookId: row.bookId
       }).then(res => {
         if (res.code == 200) {
